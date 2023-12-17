@@ -5,30 +5,31 @@ import org.springframework.stereotype.Controller
 
 @Controller
 class ContactController {
+    ContactService contactService
 
     def index() {
         def contacts = Contact.findAll()
         //redirect action: "list"
         println("..........index.............${contacts.size()}...............")
-        render (view :"list",model:[contacts: contacts])
+        render(view: "list", model: [contacts: contacts])
 
     }
     def create = {
         println("..........index............................")
-        render (view :"create")
+        render(view: "create")
     }
 
     def save() {
         def contact = new Contact(params)
-        contact.save ()
+        contact.save()
         println(">>>>>>>>>>>>>>>>>>>>>>>>Save ${contact}")
-        redirect (action: "show", id: contact.id)
+        redirect(action: "show", id: contact.id)
 
     }
 
     def edit() {
         def contact = Contact.get(params.id)
-        render (view :"edit",model:[contact: contact])
+        render(view: "edit", model: [contact: contact])
     }
 
     @Transactional
@@ -42,21 +43,19 @@ class ContactController {
 
     def show() {
         def contact = Contact.get(params.id)
-        render (view :"show",model:[contact: contact])
+        render(view: "show", model: [contact: contact])
 
     }
 
     def list() {
         println("......................................")
         def contacts = Contact.findAll()
-      //  [contacts: contacts]
-        render (view :"list",model:[contacts: contacts])
+        //  [contacts: contacts]
+        render(view: "list", model: [contacts: contacts])
     }
 
-    @Transactional
     def delete() {
-        def contact = Contact.findById(params.id)
-        contact.delete()
+        contactService.delete(params.id as Long)
         redirect action: "index"
 
     }
